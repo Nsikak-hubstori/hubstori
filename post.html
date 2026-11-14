@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>hubstori</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Watch on hubstori 🔥">
+<meta property="og:description" content="Tap 🔊 to unmute | @hubstori">
+<meta property="og:url" content="https://hubstori.vercel.app/post.html">
+<meta property="og:image" id="ogImage" content="https://hubstori.vercel.app/thumbnail.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Watch on hubstori 🔥">
+<meta name="twitter:description" content="Tap 🔊 to unmute | @hubstori">
+<meta name="twitter:image" id="twImage" content="https://hubstori.vercel.app/thumbnail.jpg">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#000;color:#fff;overflow:hidden}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:50;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:linear-gradient(rgba(0,0,0,0.95),rgba(0,0,0,0.3))}
+.logo{font-weight:900;font-size:18px;color:#fff;text-decoration:none}.logo span{color:#fe2c55}
+.menu{display:flex;gap:12px;font-size:12px}.menu a{color:#fff;text-decoration:none}
+#feed{height:100vh;height:100dvh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;padding-top:52px}
+#feed::-webkit-scrollbar{display:none}
+.reel{height:calc(100vh - 52px);height:calc(100dvh - 52px);scroll-snap-align:start;position:relative;background:#000;overflow:hidden;display:flex;flex-direction:column}
+.video-area{flex:1;position:relative;overflow:hidden;background:#000}
+.thumb-cover{position:absolute;top:0;left:0;width:100%;height:100%;z-index:5;background:#000;pointer-events:none;transition:opacity 0.3s}
+.thumb-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.yt-full{position:absolute;top:50%;left:50%;width:100%;height:100%;transform:translate(-50%,-50%)}
+.yt-full iframe{position:absolute;top:50%;left:50%;width:177.78vh;height:100vh;min-width:100%;min-height:56.25vw;transform:translate(-50%,-50%);border:0}
+.tiktok-full{position:absolute;top:0;left:0;width:100%;height:100%}
+.tiktok-full iframe{width:100%!important;height:100%!important;border:0;display:block}
+.overlay{position:absolute;bottom:0;left:0;right:0;padding:15px 55px 15px 15px;background:linear-gradient(transparent,rgba(0,0,0,0.9));z-index:10;pointer-events:none}
+.overlay .user,.overlay .desc,.overlay .more{pointer-events:auto}
+.user{font-weight:bold;font-size:15px;margin-bottom:6px}
+.desc{font-size:14px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.desc.expanded{display:block;-webkit-line-clamp:unset;background:rgba(0,0,0,0.75);padding:8px;border-radius:8px;max-height:180px;overflow-y:auto}
+.more{color:#ccc;font-size:12px;margin-top:4px}
+.actions{position:absolute;right:10px;bottom:110px;display:flex;flex-direction:column;gap:14px;z-index:20}
+.action-btn{background:rgba(255,255,255,0.2);width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;border:none;color:#fff;cursor:pointer}
+.action-btn.liked{background:#fe2c55}
+.action-label{font-size:10px;text-align:center;margin-top:2px;color:#fff}
+.unmute-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:30;background:rgba(0,0,0,0.75);color:#fff;border:2px solid #fff;border-radius:50px;padding:14px 22px;font-size:16px;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.unmute-btn:active{transform:translate(-50%,-50%) scale(0.95)}
+.ad-area{display:none;width:100%;background:#0a0a0a;justify-content:center;align-items:center;overflow:hidden}
+.ad-area.show{display:flex;min-height:90px;max-height:110px;border-top:1px solid #222}
+.reel.has-native-ad .video-area{flex:none;height:calc(100% - 90px)}
+.ad-label{font-size:10px;color:#777;text-align:center;letter-spacing:1px}
+.loading{text-align:center;padding:120px 20px;color:#aaa}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:10px 18px;border-radius:20px;font-size:13px;font-weight:bold;z-index:100;display:none}
+</style>
+</head>
+<body>
+<div class="top-bar"><a href="/" class="logo">hubstori</a><div class="menu"><a href="/about.html">About Us</a><a href="/contact.html">Contact Us</a><a href="/disclaimer.html">Disclaimer</a></div></div>
+<div id="feed"><div class="loading">Loading movies... 🎬</div></div>
+<div class="toast" id="toast">Link copied!</div>
+<script>
+let thumbs = {};
+let mutedState = {};
+function showToast(msg){
+  let t=document.getElementById('toast'); t.textContent=msg; t.style.display='block';
+  setTimeout(()=>{ t.style.display='none'; },2000);
+}
+function shareReel(id){
+  let link = window.location.origin + '/post.html?id=' + id;
+  if(navigator.share){ navigator.share({url:link}); }
+  else { navigator.clipboard.writeText(link); showToast('Link copied!'); }
+}
+function copyPostLink(id){
+  let link = window.location.origin + '/post.html?id=' + id;
+  navigator.clipboard.writeText(link).then(()=>{ showToast('Link copied! Only thumbnail will show'); })
+  .catch(()=>{
+    let input=document.createElement('input'); input.value=link; document.body.appendChild(input); input.select(); document.execCommand('copy'); document.body.removeChild(input);
+    showToast('Link copied! Only thumbnail will show');
+  });
+}
+function toggleLike(btn, id){
+  let liked = btn.classList.toggle('liked');
+  let countEl = document.getElementById('like-count-'+id);
+  let key = 'like-'+id;
+  let count = parseInt(localStorage.getItem(key) || '0');
+  if(liked){ count++; btn.textContent='❤️'; } else { count=Math.max(0,count-1); btn.textContent='🤍'; }
+  localStorage.setItem(key, count);
+  localStorage.setItem('liked-'+id, liked ? '1':'0');
+  if(countEl) countEl.textContent = count > 0 ? count : '';
+}
+function toggleMute(id, type, btn){
+  let isMuted = mutedState[id] !== false;
+  if(isMuted){
+    mutedState[id]=false; btn.textContent='🔊 Tap to Mute';
+    if(type==='youtube'){
+      let iframe=document.getElementById('yt-'+id);
+      if(iframe){
+        iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+        iframe.contentWindow.postMessage('{"event":"command","func":"play","args":""}', '*');
+      }
+    }
+  } else {
+    mutedState[id]=true; btn.textContent='🔇 Tap for Sound';
+    if(type==='youtube'){
+      let iframe=document.getElementById('yt-'+id);
+      if(iframe) iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+    }
+  }
+}
+function ytCommand(id, func){
+  let iframe=document.getElementById('yt-'+id);
+  if(iframe) iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:func,args:''}), '*');
+}
+Promise.all([
+  fetch('videos.json').then(r=>r.json()).catch(()=>[]),
+  fetch('thumbnails.json').then(r=>r.json()).catch(()=>({}))
+]).then(([videos, thumbMap])=>{
+  thumbs = thumbMap || {};
+  let feed=document.getElementById('feed'); feed.innerHTML='';
+  const params = new URLSearchParams(window.location.search);
+  const targetId = params.get('id');
+  // Update share preview image from thumbnails.json for THIS post - for ALL posts, not only Offset
+  if(targetId && thumbs[targetId]){
+    let fullThumb = 'https://hubstori.vercel.app/' + thumbs[targetId];
+    let og = document.getElementById('ogImage'); if(og) og.setAttribute('content', fullThumb);
+    let tw = document.getElementById('twImage'); if(tw) tw.setAttribute('content', fullThumb);
+  }
+  videos.forEach((v,i)=>{
+    mutedState[v.id]=true;
+    // DIRECT TO thumbnails.json FOR ALL POSTS
+    let thumbSrc = thumbs[v.id] || v.thumbnail || v.thumb || 'thumbnail.jpg';
+    let videoHTML='';
+    if(v.type==='youtube'){
+      videoHTML=`<div class="yt-full"><iframe id="yt-${v.id}" loading="lazy" src="https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&mute=1&enablejsapi=1&rel=0&modestbranding=1&playsinline=1&loop=1&playlist=${v.id}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+    } else {
+      videoHTML=`<div class="tiktok-full"><iframe id="tt-${v.id}" loading="lazy" src="https://www.tiktok.com/embed/v2/${v.id}" allowfullscreen scrolling="no" allow="encrypted-media; autoplay;"></iframe></div>`;
+    }
+    let adHTML='';
+    if(i % 2 === 1){ adHTML=`<div class="ad-area"><div><div class="ad-label">ADVERTISEMENT</div><div id="monetag-native-${i}"></div></div></div>`; }
+    let isLiked = localStorage.getItem('liked-'+v.id)==='1';
+    let likeCount = localStorage.getItem('like-'+v.id) || '';
+    let reel=document.createElement('div'); reel.className='reel'; reel.dataset.id=v.id;
+    reel.innerHTML=`
+      <div class="video-area">
+        ${videoHTML}
+        <div class="thumb-cover" id="thumb-${v.id}">
+          <img src="${thumbSrc}" alt="hubstori" loading="eager">
+        </div>
+        <button class="unmute-btn" id="unmute-${v.id}" onclick="toggleMute('${v.id}','${v.type}',this)">🔇 Tap for Sound</button>
+        <div class="overlay">
+          <div class="user">${v.user||'@hubstori'} 🎬</div>
+          <div class="desc" onclick="this.classList.toggle('expanded')">${v.desc}</div>
+          <div class="more">Tap description to read ▼ • Auto plays muted</div>
+        </div>
+        <div class="actions">
+          <div><button class="action-btn ${isLiked?'liked':''}" onclick="toggleLike(this,'${v.id}')">${isLiked?'❤️':'🤍'}</button><div class="action-label" id="like-count-${v.id}">${likeCount}</div></div>
+          <div><button class="action-btn" onclick="shareReel('${v.id}')">↗️</button><div class="action-label">Share</div></div>
+          <div><button class="action-btn" onclick="copyPostLink('${v.id}')">🔗</button><div class="action-label">Copy Link</div></div>
+        </div>
+      </div>
+      ${adHTML}`;
+    feed.appendChild(reel);
+    setTimeout(()=>{
+      let t=document.getElementById('thumb-'+v.id);
+      if(t){ t.style.opacity='0'; setTimeout(()=>{ t.style.display='none'; },300); }
+    }, 800);
+  });
+  // SINGLE POST = HOME: auto-scroll to ?id=, but keep full feed to scroll up/down - NO Back button
+  if(targetId){
+    setTimeout(()=>{
+      let el=document.querySelector(`.reel[data-id="${targetId}"]`);
+      if(el) el.scrollIntoView({behavior:'instant', block:'start'});
+    }, 300);
+  }
+  let observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      let reel=e.target; let id=reel.dataset.id;
+      let vid = videos.find(x=>x.id===id);
+      if(!vid || vid.type!=='youtube') return;
+      if(e.isIntersecting && e.intersectionRatio > 0.6){ ytCommand(id,'play'); } else { ytCommand(id,'pause'); }
+    });
+  }, {threshold:[0.6], root: feed});
+  document.querySelectorAll('.reel').forEach(r=>observer.observe(r));
+});
+window.addEventListener('load', function(){
+  setTimeout(function(){ loadVignette(); loadNativeBanner(); }, 1500);
+});
+function loadVignette(){}
+function loadNativeBanner(){
+  document.querySelectorAll('.ad-area').forEach(function(adBox){
+    adBox.classList.add('show');
+    adBox.closest('.reel').classList.add('has-native-ad');
+  });
+}
+</script>
+</body>
+</html>
