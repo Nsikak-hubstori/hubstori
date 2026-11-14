@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hubstori</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Watch on hubstori 🔥">
+<meta property="og:description" content="Tap 🔊 to unmute | @hubstori">
+<meta property="og:url" content="https://hubstori.vercel.app/post.html">
+<meta property="og:image" id="ogImage" content="https://hubstori.vercel.app/offset.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" id="twImage" content="https://hubstori.vercel.app/offset.jpg">
+<style>
+body{background:#000;color:#fff;font-family:Arial;text-align:center;padding:0;margin:0}
+.top{font-weight:900;font-size:20px;padding:14px 0;border-bottom:1px solid #222;position:sticky;top:0;background:#000;z-index:10}
+.wrap{max-width:420px;margin:0 auto;padding:12px}
+#player{position:relative;width:100%;aspect-ratio:9/16;background:#000;border-radius:12px;overflow:hidden}
+#player iframe{width:100%;height:100%;border:0}
+#poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+#unmute{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;border:2px solid #fff;padding:16px 22px;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;z-index:5;white-space:nowrap;animation:pulse 1.5s infinite}
+@keyframes pulse{0%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.08)}100%{transform:translate(-50%,-50%) scale(1)}}
+.desc{font-size:14px;color:#ddd;line-height:1.5;text-align:left;margin:12px 4px;white-space:pre-line}
+.user{font-weight:bold;text-align:left;margin:8px 4px}
+.back{display:inline-block;margin:14px 0;color:#fff;text-decoration:none;border:1px solid #333;padding:10px 18px;border-radius:20px;font-size:13px}
+</style>
+</head><body>
+<div class="top">hubstori</div>
+<div class="wrap">
+<div id="player">
+  <img id="poster" src="" alt="">
+  <button id="unmute">🔊 Tap to unmute</button>
+</div>
+<div class="user" id="user">@hubstori</div>
+<p class="desc" id="desc">Loading...</p>
+<a class="back" href="/">← Back to hubstori</a>
+</div>
+<script>
+let params=new URLSearchParams(location.search);
+let id=params.get('id') || 'NtUHWHdczEk';
+let player=document.getElementById('player');
+let unmuteBtn=document.getElementById('unmute');
+let poster=document.getElementById('poster');
+let videoId=id;
+let videoType='youtube';
+
+// AUTOMATIC THUMBNAIL: uses <VIDEO_ID>.jpg
+// Example: id=NtUHWHdczEk -> https://hubstori.vercel.app/NtUHWHdczEk.jpg
+let thumbUrl = 'https://hubstori.vercel.app/' + id + '.jpg';
+poster.src = thumbUrl;
+// If that file doesn't exist, fallback to offset.jpg
+poster.onerror = function(){ poster.src='https://hubstori.vercel.app/offset.jpg'; thumbUrl='https://hubstori.vercel.app/offset.jpg'; };
+// Update meta for browser share
+document.getElementById('ogImage').setAttribute('content', thumbUrl);
+document.getElementById('twImage').setAttribute('content', thumbUrl);
+
+fetch('videos.json').then(r=>r.json()).then(videos=>{
+  let v=videos.find(x=>x.id===id);
+  if(v){ videoId=v.id; videoType=v.type; document.getElementById('desc').textContent=v.desc; document.getElementById('user').textContent=v.user; document.title=v.desc.split('\n')[0]+' | hubstori'; }
+  loadVideo(true);
+}).catch(()=>{ loadVideo(true); });
+function loadVideo(muted){
+  let src='';
+  if(videoType==='tiktok'){ src='https://www.tiktok.com/embed/v2/'+videoId+'?autoplay=1&muted='+(muted?1:0); }
+  else { src='https://www.youtube.com/embed/'+videoId+'?autoplay=1&mute='+(muted?1:0)+'&playsinline=1&rel=0&loop=1&playlist='+videoId; }
+  let old=player.querySelector('iframe'); if(old) old.remove();
+  let f=document.createElement('iframe');
+  f.src=src; f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen=true;
+  player.prepend(f);
+  // Hide poster once video starts, show unmute in center
+  poster.style.display='none';
+  unmuteBtn.style.display = muted ? 'block' : 'none';
+}
+unmuteBtn.onclick=function(e){ e.stopPropagation(); loadVideo(false); };
+</script>
+</body></html>
