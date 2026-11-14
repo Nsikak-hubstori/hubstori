@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offset - GMFU 🔥🔥 Full Album Just Dropped! | hubstori</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Offset - GMFU 🔥🔥 Full Album Just Dropped!">
+<meta property="og:description" content="Tap 🔊 to unmute — This one is crazy! | @hubstori">
+<meta property="og:url" content="https://hubstori.vercel.app/post.html?id=NtUHWHdczEk">
+<meta property="og:image" content="https://hubstori.vercel.app/thumbs/img-20261114-wa9117.jpg">
+<meta property="og:image:width" content="1080">
+<meta property="og:image:height" content="1920">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Offset - GMFU 🔥🔥 Full Album Just Dropped!">
+<meta name="twitter:description" content="Tap 🔊 to unmute — This one is crazy! | @hubstori">
+<meta name="twitter:image" content="https://hubstori.vercel.app/thumbs/img-20261114-wa9117.jpg">
+<style>
+body{background:#000;color:#fff;font-family:Arial;text-align:center;padding:0;margin:0}
+.top{font-weight:900;font-size:20px;padding:14px 0;border-bottom:1px solid #222;position:sticky;top:0;background:#000;z-index:10}
+.wrap{max-width:420px;margin:0 auto;padding:12px}
+#player{position:relative;width:100%;aspect-ratio:9/16;background:#000;border-radius:12px;overflow:hidden}
+#player iframe{width:100%;height:100%;border:0}
+#unmute{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.7);color:#fff;border:0;padding:10px 14px;border-radius:20px;font-size:14px;cursor:pointer;z-index:5}
+.desc{font-size:14px;color:#ddd;line-height:1.5;text-align:left;margin:12px 4px;white-space:pre-line}
+.user{font-weight:bold;text-align:left;margin:8px 4px}
+.back{display:inline-block;margin:14px 0;color:#fff;text-decoration:none;border:1px solid #333;padding:10px 18px;border-radius:20px;font-size:13px}
+</style>
+</head><body>
+<div class="top">hubstori</div>
+<div class="wrap">
+<div id="player">
+  <button id="unmute">🔊 Tap to unmute</button>
+</div>
+<div class="user" id="user">@hubstori</div>
+<p class="desc" id="desc">Offset - GMFU 🔥🔥 Full Album Just Dropped!
+Tap 🔊 to unmute — This one is crazy!</p>
+<a class="back" href="/">← Back to hubstori</a>
+</div>
+<script>
+let params=new URLSearchParams(location.search);
+let id=params.get('id') || 'NtUHWHdczEk';
+let player=document.getElementById('player');
+let unmuteBtn=document.getElementById('unmute');
+let videoId=id;
+let videoType='youtube';
+
+fetch('videos.json').then(r=>r.json()).then(videos=>{
+  let v=videos.find(x=>x.id===id);
+  if(v){ videoId=v.id; videoType=v.type; document.getElementById('desc').textContent=v.desc; document.getElementById('user').textContent=v.user; }
+  loadVideo(true);
+}).catch(()=>{ loadVideo(true); });
+
+function loadVideo(muted){
+  let src='';
+  if(videoType==='tiktok'){ src='https://www.tiktok.com/embed/v2/'+videoId+'?autoplay=1&muted='+(muted?1:0); }
+  else { src='https://www.youtube.com/embed/'+videoId+'?autoplay=1&mute='+(muted?1:0)+'&playsinline=1&rel=0&loop=1&playlist='+videoId; }
+  let old=player.querySelector('iframe'); if(old) old.remove();
+  let f=document.createElement('iframe');
+  f.src=src; f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen=true;
+  player.prepend(f);
+  unmuteBtn.style.display = muted ? 'block' : 'none';
+}
+unmuteBtn.onclick=function(e){ e.stopPropagation(); loadVideo(false); };
+</script>
+</body></html>
