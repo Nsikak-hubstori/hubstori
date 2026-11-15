@@ -1,26 +1,30 @@
-[   {
+[
+  {
     "type": "tiktok",
     "id": "https://vm.tiktok.com/ZSpVSkYRC/ This post is shared via TikTok Lite. Download TikTok Lite to enjoy more posts: https://www.tiktok.com/tiktoklite",
     "user": "@hubstori",
-    "desc": "New movie add full movie soon follow to see full "
+    "desc": "New movie add full movie soon follow to see full ",
+    "thumbnail": ""
   },
-  
   {
     "type": "youtube",
     "id": "NtUHWHdczEk",
     "user": "@hubstori",
-    "desc": "Offset - GMFU 🔥🔥 Full Album Just Dropped! Tap 🔊 to unmute — This one is crazy!"
+    "desc": "Offset - GMFU 🔥🔥 Full Album Just Dropped! Tap 🔊 to unmute — This one is crazy!",
+    "thumbnail": "https://i.ibb.co/cc9wVQX8/offset.jpg"
   },
   {
     "type": "youtube",
     "id": "dQw4w9WgXcQ",
     "user": "@hubstori",
-    "desc": "Best action movie 2026! Tap to read full description..."
+    "desc": "Best action movie 2026! Tap to read full description...",
+    "thumbnail": ""
   },
   {
     "type": "tiktok",
     "id": "7312345678901234567",
     "user": "@hubstori",
-    "desc": "Nollywood thriller that broke TikTok! Tap to read..."
+    "desc": "Nollywood thriller that broke TikTok! Tap to read...",
+    "thumbnail": ""
   }
 ]
